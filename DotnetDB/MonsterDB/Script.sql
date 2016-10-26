@@ -1,5 +1,5 @@
 ﻿
-/*
+
 create schema Monster;
 go
 
@@ -55,4 +55,3 @@ alter table Monster.Monster
 	add constraint fk_monster_typeid foreign key (TypeID) references Monster.MonsterType(MonsterTypeID);
 	
 go
-*/
