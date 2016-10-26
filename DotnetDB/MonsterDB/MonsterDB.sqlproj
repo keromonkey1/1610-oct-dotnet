@@ -67,4 +67,7 @@
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="MonsterDB.publish.xml" />
+  </ItemGroup>
 </Project>
