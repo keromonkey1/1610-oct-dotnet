@@ -11,6 +11,6 @@ namespace MonsterApp.DataAccess.Models
     public int TitleID { get; set; }
     public string Name { get; set; }
     public bool Active { get; set; }
-
+    public string TitleName { get; internal set; }
   }
 }

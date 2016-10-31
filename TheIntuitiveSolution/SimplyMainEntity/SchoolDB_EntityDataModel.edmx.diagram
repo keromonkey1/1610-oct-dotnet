@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="061512fc5cd14c8b96eae48661cc3889" Name="Diagram1">
+        <EntityTypeShape EntityType="SchoolDBModel.Course" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.DayTable" Width="1.5" PointX="5.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Holding" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Major" Width="1.5" PointX="3" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Person" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Role" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Room" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Schedule" Width="1.5" PointX="7.5" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.Term" Width="1.5" PointX="0.75" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SchoolDBModel.TimeBlock" Width="1.5" PointX="8" PointY="6" IsExpanded="true" />
+        <AssociationConnector Association="SchoolDBModel.fk_termid_course" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.fk_day_" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.fk_personid_sched" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.fk_roleid" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.fk_termid" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.Instructors" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.MajorJunction" ManuallyRouted="false" />
+        <AssociationConnector Association="SchoolDBModel.ScheduleJunction" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

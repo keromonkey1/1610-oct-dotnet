@@ -1,0 +1,1641 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SchoolDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="CourseID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Credit" Type="tinyint" Nullable="false" />
+          <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+          <Property Name="Enrolled" Type="smallint" Nullable="false" />
+          <Property Name="Capacity" Type="smallint" Nullable="false" />
+          <Property Name="TermID" Type="smallint" />
+        </EntityType>
+        <EntityType Name="DayTable">
+          <Key>
+            <PropertyRef Name="Day_" />
+          </Key>
+          <Property Name="Day_" Type="tinyint" Nullable="false" />
+          <Property Name="NameOfDay" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Holding">
+          <Key>
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="PersonID" Type="int" Nullable="false" />
+          <Property Name="CourseID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Instructors">
+          <Key>
+            <PropertyRef Name="CourseID" />
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="CourseID" Type="int" Nullable="false" />
+          <Property Name="PersonID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Major">
+          <Key>
+            <PropertyRef Name="MajorID" />
+          </Key>
+          <Property Name="MajorID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MajorTitle" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MajorJunction">
+          <Key>
+            <PropertyRef Name="MajorID" />
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="MajorID" Type="smallint" Nullable="false" />
+          <Property Name="PersonID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoleID" Type="tinyint" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateOfCreation" Type="date" />
+          <Property Name="MajorID" Type="int" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="roleTitle" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rooms">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="CourseID" Type="int" Nullable="false" />
+          <Property Name="RoomID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RoomLocation" Type="nvarchar" MaxLength="100" />
+          <Property Name="BuildingName" Type="nvarchar" MaxLength="100" />
+          <Property Name="RoomCap" Type="smallint" />
+        </EntityType>
+        <EntityType Name="Schedule">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+          </Key>
+          <Property Name="ScheduleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TermID" Type="smallint" />
+          <Property Name="PersonID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ScheduleJunction">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="ScheduleID" Type="int" Nullable="false" />
+          <Property Name="CourseID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Term">
+          <Key>
+            <PropertyRef Name="TermID" />
+          </Key>
+          <Property Name="TermID" Type="smallint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TermName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SchoolDB.dbo.TimeBlock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TimeBlock">
+          <Key>
+            <PropertyRef Name="CourseID" />
+            <PropertyRef Name="Day_" />
+          </Key>
+          <Property Name="CourseID" Type="int" Nullable="false" />
+          <Property Name="Day_" Type="tinyint" Nullable="false" />
+          <Property Name="StartTime" Type="smallint" />
+          <Property Name="EndTime" Type="smallint" />
+          <Property Name="TermID" Type="smallint" />
+          <Property Name="RoomID" Type="int" />
+        </EntityType>
+        <Association Name="fk_courseid">
+          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="Instructors" Type="Self.Instructors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseID" />
+            </Principal>
+            <Dependent Role="Instructors">
+              <PropertyRef Name="CourseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_courseid_sj">
+          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="ScheduleJunction" Type="Self.ScheduleJunction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseID" />
+            </Principal>
+            <Dependent Role="ScheduleJunction">
+              <PropertyRef Name="CourseID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_day_">
+          <End Role="DayTable" Type="Self.DayTable" Multiplicity="1" />
+          <End Role="TimeBlock" Type="Self.TimeBlock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DayTable">
+              <PropertyRef Name="Day_" />
+            </Principal>
+            <Dependent Role="TimeBlock">
+              <PropertyRef Name="Day_" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_majorid">
+          <End Role="Major" Type="Self.Major" Multiplicity="1" />
+          <End Role="MajorJunction" Type="Self.MajorJunction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Major">
+              <PropertyRef Name="MajorID" />
+            </Principal>
+            <Dependent Role="MajorJunction">
+              <PropertyRef Name="MajorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_personid">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="MajorJunction" Type="Self.MajorJunction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="MajorJunction">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_personid_instructor">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Instructors" Type="Self.Instructors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Instructors">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_personid_sched">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_roleid">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Person" Type="Self.Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_scheduleid_sj">
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="1" />
+          <End Role="ScheduleJunction" Type="Self.ScheduleJunction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Schedule">
+              <PropertyRef Name="ScheduleID" />
+            </Principal>
+            <Dependent Role="ScheduleJunction">
+              <PropertyRef Name="ScheduleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_termid">
+          <End Role="Term" Type="Self.Term" Multiplicity="0..1" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Term">
+              <PropertyRef Name="TermID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="TermID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_termid_course">
+          <End Role="Term" Type="Self.Term" Multiplicity="0..1" />
+          <End Role="Course" Type="Self.Course" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Term">
+              <PropertyRef Name="TermID" />
+            </Principal>
+            <Dependent Role="Course">
+              <PropertyRef Name="TermID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="Add2HoldList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AddClass2StudentSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AddInstructor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AddMajor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="majorid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AddNewCourse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="coursetitle" Type="nvarchar" Mode="In" />
+          <Parameter Name="credit" Type="tinyint" Mode="In" />
+          <Parameter Name="coursedepartment" Type="nvarchar" Mode="In" />
+          <Parameter Name="capacity" Type="smallint" Mode="In" />
+          <Parameter Name="termseason" Type="nvarchar" Mode="In" />
+          <Parameter Name="termyear" Type="smallint" Mode="In" />
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="roomlocation" Type="nvarchar" Mode="In" />
+          <Parameter Name="buildingname" Type="nvarchar" Mode="In" />
+          <Parameter Name="roomcap" Type="smallint" Mode="In" />
+          <Parameter Name="day_" Type="tinyint" Mode="In" />
+          <Parameter Name="stime" Type="smallint" Mode="In" />
+          <Parameter Name="etime" Type="smallint" Mode="In" />
+        </Function>
+        <Function Name="AddNewPerson" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="fname" Type="nvarchar" Mode="In" />
+          <Parameter Name="mname" Type="nvarchar" Mode="In" />
+          <Parameter Name="lname" Type="nvarchar" Mode="In" />
+          <Parameter Name="roleid" Type="tinyint" Mode="In" />
+        </Function>
+        <Function Name="AllCourseInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="TermID" Type="smallint" />
+                <Property Name="Day_" Type="tinyint" Nullable="false" />
+                <Property Name="StartTime" Type="smallint" />
+                <Property Name="EndTime" Type="smallint" />
+                <Property Name="RoomID" Type="int" />
+                <Property Name="BuildingName" Type="nvarchar" MaxLength="100" />
+                <Property Name="RoomLocation" Type="nvarchar" MaxLength="100" />
+                <Property Name="RoomCap" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="AlterCap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <Parameter Name="newcap" Type="int" Mode="In" />
+        </Function>
+        <Function Name="AlterTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <Parameter Name="newstart" Type="int" Mode="In" />
+          <Parameter Name="newend" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Check4Conflict" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <Parameter Name="personid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CheckConflict" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <Parameter Name="personid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CourseInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="TermID" Type="smallint" />
+                <Property Name="Day_" Type="tinyint" Nullable="false" />
+                <Property Name="StartTime" Type="smallint" />
+                <Property Name="EndTime" Type="smallint" />
+                <Property Name="RoomID" Type="int" />
+                <Property Name="BuildingName" Type="nvarchar" MaxLength="100" />
+                <Property Name="RoomLocation" Type="nvarchar" MaxLength="100" />
+                <Property Name="RoomCap" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="DeleteCourse" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DropClassFromSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetAllEnrolled" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="Full Name" Type="nvarchar" MaxLength="302" Nullable="false" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="ScheduleID" Type="int" Nullable="false" />
+                <Property Name="TermName" Type="nvarchar" MaxLength="100" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetAllPeople" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="sorter" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Full Name" Type="nvarchar" MaxLength="250" />
+                <Property Name="Person_ID" Type="int" Nullable="false" />
+                <Property Name="Role_Type" Type="nvarchar" MaxLength="50" />
+                <Property Name="DateOfCreation" Type="nvarchar" MaxLength="50" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetAllStudents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="FirstName" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="MiddleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="LastName" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Role Title" Type="nvarchar" MaxLength="200" Nullable="false" />
+                <Property Name="Major" Type="nvarchar" MaxLength="200" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="DateOfCreation" Type="date" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetEnrolledStudents" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="Full Name" Type="nvarchar" MaxLength="302" Nullable="false" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="ScheduleID" Type="int" Nullable="false" />
+                <Property Name="TermName" Type="nvarchar" MaxLength="100" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetInstructors" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="courseid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="FirstName" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="MiddleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="LastName" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="CourseID" Type="int" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" />
+                <Property Name="Credit" Type="tinyint" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" />
+                <Property Name="Capacity" Type="smallint" />
+                <Property Name="TermID" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GetPersonDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Full Name" Type="nvarchar" MaxLength="302" Nullable="false" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="RoleID" Type="tinyint" Nullable="false" />
+                <Property Name="Role" Type="nvarchar" MaxLength="200" Nullable="false" />
+                <Property Name="Major" Type="nvarchar" MaxLength="200" Nullable="false" />
+                <Property Name="DateOfCreation" Type="date" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="GrabSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Full Name" Type="nvarchar" MaxLength="302" Nullable="false" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="RoleID" Type="tinyint" Nullable="false" />
+                <Property Name="Role" Type="nvarchar" MaxLength="200" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="Days" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="RoomCap" Type="smallint" />
+                <Property Name="Dept." Type="nvarchar" MaxLength="200" />
+                <Property Name="StartTime" Type="smallint" />
+                <Property Name="EndTime" Type="smallint" />
+                <Property Name="RoomID" Type="int" />
+                <Property Name="RoomLocation" Type="nvarchar" MaxLength="100" />
+                <Property Name="BuildingName" Type="nvarchar" MaxLength="100" />
+                <Property Name="TermName" Type="nvarchar" MaxLength="100" Nullable="false" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="RemoveFromHoldList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RemoveInstructor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="courseid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RemoveMajor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="majorid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="RemovePerson" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="currenttermid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ShowAllClosed" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="TermID" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ShowAllClosed2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="termid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="TermID" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ShowAllOpen" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="TermID" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="ShowAllOpen2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="termid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="CourseDepartment" Type="nvarchar" MaxLength="200" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="TermID" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="SummonHoldList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="Full Name" Type="nvarchar" MaxLength="302" Nullable="false" />
+                <Property Name="PersonID" Type="int" Nullable="false" />
+                <Property Name="CourseID" Type="int" Nullable="false" />
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Credit" Type="tinyint" Nullable="false" />
+                <Property Name="Days" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="StartTime" Type="smallint" />
+                <Property Name="EndTime" Type="smallint" />
+                <Property Name="BuildingName" Type="nvarchar" MaxLength="100" />
+                <Property Name="RoomLocation" Type="nvarchar" MaxLength="100" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="RoomCap" Type="smallint" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="SummonSchedule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="CourseTitle" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="ID" Type="int" Nullable="false" />
+                <Property Name="Days" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="Start" Type="smallint" />
+                <Property Name="End" Type="smallint" />
+                <Property Name="Credits" Type="tinyint" Nullable="false" />
+                <Property Name="Enrolled" Type="smallint" Nullable="false" />
+                <Property Name="Capacity" Type="smallint" Nullable="false" />
+                <Property Name="Building" Type="nvarchar" MaxLength="100" />
+                <Property Name="Room" Type="nvarchar" MaxLength="100" />
+                <Property Name="RoomCap" Type="smallint" />
+                <Property Name="Term" Type="nvarchar" MaxLength="100" Nullable="false" />
+                <Property Name="TermID" Type="smallint" Nullable="false" />
+                <Property Name="Dept." Type="nvarchar" MaxLength="200" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="SwitchRoles" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="personid" Type="int" Mode="In" />
+          <Parameter Name="newroleid" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="SchoolDBModelStoreContainer">
+          <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DayTable" EntityType="Self.DayTable" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Holding" EntityType="Self.Holding" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Instructors" EntityType="Self.Instructors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Major" EntityType="Self.Major" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MajorJunction" EntityType="Self.MajorJunction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rooms" EntityType="Self.Rooms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Schedule" EntityType="Self.Schedule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ScheduleJunction" EntityType="Self.ScheduleJunction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Term" EntityType="Self.Term" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TimeBlock" EntityType="Self.TimeBlock" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TimeBlock].[CourseID] AS [CourseID], 
+    [TimeBlock].[Day_] AS [Day_], 
+    [TimeBlock].[StartTime] AS [StartTime], 
+    [TimeBlock].[EndTime] AS [EndTime], 
+    [TimeBlock].[TermID] AS [TermID], 
+    [TimeBlock].[RoomID] AS [RoomID]
+    FROM [dbo].[TimeBlock] AS [TimeBlock]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="fk_courseid" Association="Self.fk_courseid">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="Instructors" EntitySet="Instructors" />
+          </AssociationSet>
+          <AssociationSet Name="fk_courseid_sj" Association="Self.fk_courseid_sj">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="ScheduleJunction" EntitySet="ScheduleJunction" />
+          </AssociationSet>
+          <AssociationSet Name="fk_day_" Association="Self.fk_day_">
+            <End Role="DayTable" EntitySet="DayTable" />
+            <End Role="TimeBlock" EntitySet="TimeBlock" />
+          </AssociationSet>
+          <AssociationSet Name="fk_majorid" Association="Self.fk_majorid">
+            <End Role="Major" EntitySet="Major" />
+            <End Role="MajorJunction" EntitySet="MajorJunction" />
+          </AssociationSet>
+          <AssociationSet Name="fk_personid" Association="Self.fk_personid">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="MajorJunction" EntitySet="MajorJunction" />
+          </AssociationSet>
+          <AssociationSet Name="fk_personid_instructor" Association="Self.fk_personid_instructor">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Instructors" EntitySet="Instructors" />
+          </AssociationSet>
+          <AssociationSet Name="fk_personid_sched" Association="Self.fk_personid_sched">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Schedule" EntitySet="Schedule" />
+          </AssociationSet>
+          <AssociationSet Name="fk_roleid" Association="Self.fk_roleid">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="Person" EntitySet="Person" />
+          </AssociationSet>
+          <AssociationSet Name="fk_scheduleid_sj" Association="Self.fk_scheduleid_sj">
+            <End Role="Schedule" EntitySet="Schedule" />
+            <End Role="ScheduleJunction" EntitySet="ScheduleJunction" />
+          </AssociationSet>
+          <AssociationSet Name="fk_termid" Association="Self.fk_termid">
+            <End Role="Term" EntitySet="Term" />
+            <End Role="Schedule" EntitySet="Schedule" />
+          </AssociationSet>
+          <AssociationSet Name="fk_termid_course" Association="Self.fk_termid_course">
+            <End Role="Term" EntitySet="Term" />
+            <End Role="Course" EntitySet="Course" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SchoolDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="AllCourseInfo_Result">
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+          <Property Name="Day_" Type="Byte" Nullable="false" />
+          <Property Name="StartTime" Type="Int16" />
+          <Property Name="EndTime" Type="Int16" />
+          <Property Name="RoomID" Type="Int32" />
+          <Property Name="BuildingName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomCap" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="CourseInfo_Result">
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+          <Property Name="Day_" Type="Byte" Nullable="false" />
+          <Property Name="StartTime" Type="Int16" />
+          <Property Name="EndTime" Type="Int16" />
+          <Property Name="RoomID" Type="Int32" />
+          <Property Name="BuildingName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomCap" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="GetAllEnrolled_Result">
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="Full_Name" Type="String" MaxLength="302" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="ScheduleID" Type="Int32" Nullable="false" />
+          <Property Name="TermName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetAllPeople_Result">
+          <Property Name="Full_Name" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Person_ID" Type="Int32" Nullable="false" />
+          <Property Name="Role_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfCreation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </ComplexType>
+        <ComplexType Name="GetAllStudents_Result">
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Role_Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Major" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="DateOfCreation" Type="DateTime" />
+        </ComplexType>
+        <ComplexType Name="GetEnrolledStudents_Result">
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="Full_Name" Type="String" MaxLength="302" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="ScheduleID" Type="Int32" Nullable="false" />
+          <Property Name="TermName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="GetInstructors_Result">
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Credit" Type="Byte" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" />
+          <Property Name="Capacity" Type="Int16" />
+          <Property Name="TermID" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="GetPersonDetails_Result">
+          <Property Name="Full_Name" Type="String" MaxLength="302" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="RoleID" Type="Byte" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Major" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateOfCreation" Type="DateTime" />
+        </ComplexType>
+        <ComplexType Name="GrabSchedule_Result">
+          <Property Name="Full_Name" Type="String" MaxLength="302" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="RoleID" Type="Byte" Nullable="false" />
+          <Property Name="Role" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="Days" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="RoomCap" Type="Int16" />
+          <Property Name="Dept_" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="StartTime" Type="Int16" />
+          <Property Name="EndTime" Type="Int16" />
+          <Property Name="RoomID" Type="Int32" />
+          <Property Name="RoomLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BuildingName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TermName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ShowAllClosed_Result">
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="ShowAllClosed2_Result">
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="ShowAllOpen_Result">
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="ShowAllOpen2_Result">
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="SummonHoldList_Result">
+          <Property Name="Full_Name" Type="String" MaxLength="302" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="Days" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="StartTime" Type="Int16" />
+          <Property Name="EndTime" Type="Int16" />
+          <Property Name="BuildingName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="RoomCap" Type="Int16" />
+        </ComplexType>
+        <ComplexType Name="SummonSchedule_Result">
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Days" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Start" Type="Int16" />
+          <Property Name="End" Type="Int16" />
+          <Property Name="Credits" Type="Byte" Nullable="false" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="Building" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Room" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomCap" Type="Int16" />
+          <Property Name="Term" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TermID" Type="Int16" Nullable="false" />
+          <Property Name="Dept_" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </ComplexType>
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="CourseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Credit" Type="Byte" Nullable="false" />
+          <Property Name="CourseDepartment" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enrolled" Type="Int16" Nullable="false" />
+          <Property Name="Capacity" Type="Int16" Nullable="false" />
+          <Property Name="TermID" Type="Int16" />
+          <NavigationProperty Name="Term" Relationship="Self.fk_termid_course" FromRole="Course" ToRole="Term" />
+          <NavigationProperty Name="People" Relationship="Self.Instructors" FromRole="Course" ToRole="Person" />
+          <NavigationProperty Name="Schedules" Relationship="Self.ScheduleJunction" FromRole="Course" ToRole="Schedule" />
+        </EntityType>
+        <EntityType Name="DayTable">
+          <Key>
+            <PropertyRef Name="Day_" />
+          </Key>
+          <Property Name="Day_" Type="Byte" Nullable="false" />
+          <Property Name="NameOfDay" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="TimeBlocks" Relationship="Self.fk_day_" FromRole="DayTable" ToRole="TimeBlock" />
+        </EntityType>
+        <EntityType Name="Holding">
+          <Key>
+            <PropertyRef Name="PersonID" />
+            <PropertyRef Name="CourseID" />
+          </Key>
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Major">
+          <Key>
+            <PropertyRef Name="MajorID" />
+          </Key>
+          <Property Name="MajorID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MajorTitle" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="People" Relationship="Self.MajorJunction" FromRole="Major" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonID" />
+          </Key>
+          <Property Name="PersonID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoleID" Type="Byte" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateOfCreation" Type="DateTime" Precision="0" />
+          <Property Name="MajorID" Type="Int32" />
+          <NavigationProperty Name="Schedules" Relationship="Self.fk_personid_sched" FromRole="Person" ToRole="Schedule" />
+          <NavigationProperty Name="Role" Relationship="Self.fk_roleid" FromRole="Person" ToRole="Role" />
+          <NavigationProperty Name="Courses" Relationship="Self.Instructors" FromRole="Person" ToRole="Course" />
+          <NavigationProperty Name="Majors" Relationship="Self.MajorJunction" FromRole="Person" ToRole="Major" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleID" />
+          </Key>
+          <Property Name="RoleID" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="roleTitle" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="People" Relationship="Self.fk_roleid" FromRole="Role" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="RoomID" />
+          </Key>
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="RoomID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RoomLocation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BuildingName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="RoomCap" Type="Int16" />
+        </EntityType>
+        <EntityType Name="Schedule">
+          <Key>
+            <PropertyRef Name="ScheduleID" />
+          </Key>
+          <Property Name="ScheduleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TermID" Type="Int16" />
+          <Property Name="PersonID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Self.fk_personid_sched" FromRole="Schedule" ToRole="Person" />
+          <NavigationProperty Name="Term" Relationship="Self.fk_termid" FromRole="Schedule" ToRole="Term" />
+          <NavigationProperty Name="Courses" Relationship="Self.ScheduleJunction" FromRole="Schedule" ToRole="Course" />
+        </EntityType>
+        <EntityType Name="Term">
+          <Key>
+            <PropertyRef Name="TermID" />
+          </Key>
+          <Property Name="TermID" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TermName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Courses" Relationship="Self.fk_termid_course" FromRole="Term" ToRole="Course" />
+          <NavigationProperty Name="Schedules" Relationship="Self.fk_termid" FromRole="Term" ToRole="Schedule" />
+        </EntityType>
+        <EntityType Name="TimeBlock">
+          <Key>
+            <PropertyRef Name="CourseID" />
+            <PropertyRef Name="Day_" />
+          </Key>
+          <Property Name="CourseID" Type="Int32" Nullable="false" />
+          <Property Name="Day_" Type="Byte" Nullable="false" />
+          <Property Name="StartTime" Type="Int16" />
+          <Property Name="EndTime" Type="Int16" />
+          <Property Name="TermID" Type="Int16" />
+          <Property Name="RoomID" Type="Int32" />
+          <NavigationProperty Name="DayTable" Relationship="Self.fk_day_" FromRole="TimeBlock" ToRole="DayTable" />
+        </EntityType>
+        <Association Name="fk_termid_course">
+          <End Role="Term" Type="Self.Term" Multiplicity="0..1" />
+          <End Role="Course" Type="Self.Course" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Term">
+              <PropertyRef Name="TermID" />
+            </Principal>
+            <Dependent Role="Course">
+              <PropertyRef Name="TermID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_day_">
+          <End Role="DayTable" Type="Self.DayTable" Multiplicity="1" />
+          <End Role="TimeBlock" Type="Self.TimeBlock" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DayTable">
+              <PropertyRef Name="Day_" />
+            </Principal>
+            <Dependent Role="TimeBlock">
+              <PropertyRef Name="Day_" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_personid_sched">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="PersonID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_roleid">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="Person" Type="Self.Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleID" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="RoleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_termid">
+          <End Role="Term" Type="Self.Term" Multiplicity="0..1" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Term">
+              <PropertyRef Name="TermID" />
+            </Principal>
+            <Dependent Role="Schedule">
+              <PropertyRef Name="TermID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Instructors">
+          <End Role="Course" Type="Self.Course" Multiplicity="*" />
+          <End Role="Person" Type="Self.Person" Multiplicity="*" />
+        </Association>
+        <Association Name="MajorJunction">
+          <End Role="Major" Type="Self.Major" Multiplicity="*" />
+          <End Role="Person" Type="Self.Person" Multiplicity="*" />
+        </Association>
+        <Association Name="ScheduleJunction">
+          <End Role="Course" Type="Self.Course" Multiplicity="*" />
+          <End Role="Schedule" Type="Self.Schedule" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="SchoolDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Courses" EntityType="Self.Course" />
+          <EntitySet Name="DayTables" EntityType="Self.DayTable" />
+          <EntitySet Name="Holdings" EntityType="Self.Holding" />
+          <EntitySet Name="Majors" EntityType="Self.Major" />
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <EntitySet Name="Roles" EntityType="Self.Role" />
+          <EntitySet Name="Rooms" EntityType="Self.Room" />
+          <EntitySet Name="Schedules" EntityType="Self.Schedule" />
+          <EntitySet Name="Terms" EntityType="Self.Term" />
+          <EntitySet Name="TimeBlocks" EntityType="Self.TimeBlock" />
+          <AssociationSet Name="fk_termid_course" Association="Self.fk_termid_course">
+            <End Role="Term" EntitySet="Terms" />
+            <End Role="Course" EntitySet="Courses" />
+          </AssociationSet>
+          <AssociationSet Name="fk_day_" Association="Self.fk_day_">
+            <End Role="DayTable" EntitySet="DayTables" />
+            <End Role="TimeBlock" EntitySet="TimeBlocks" />
+          </AssociationSet>
+          <AssociationSet Name="fk_personid_sched" Association="Self.fk_personid_sched">
+            <End Role="Person" EntitySet="People" />
+            <End Role="Schedule" EntitySet="Schedules" />
+          </AssociationSet>
+          <AssociationSet Name="fk_roleid" Association="Self.fk_roleid">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="fk_termid" Association="Self.fk_termid">
+            <End Role="Term" EntitySet="Terms" />
+            <End Role="Schedule" EntitySet="Schedules" />
+          </AssociationSet>
+          <AssociationSet Name="Instructors" Association="Self.Instructors">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="MajorJunction" Association="Self.MajorJunction">
+            <End Role="Major" EntitySet="Majors" />
+            <End Role="Person" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="ScheduleJunction" Association="Self.ScheduleJunction">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Schedule" EntitySet="Schedules" />
+          </AssociationSet>
+          <FunctionImport Name="AllCourseInfo" IsComposable="true" ReturnType="Collection(SchoolDBModel.AllCourseInfo_Result)" />
+          <FunctionImport Name="CourseInfo" IsComposable="true" ReturnType="Collection(SchoolDBModel.CourseInfo_Result)">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllEnrolled" IsComposable="true" ReturnType="Collection(SchoolDBModel.GetAllEnrolled_Result)" />
+          <FunctionImport Name="GetAllPeople" IsComposable="true" ReturnType="Collection(SchoolDBModel.GetAllPeople_Result)">
+            <Parameter Name="sorter" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetAllStudents" IsComposable="true" ReturnType="Collection(SchoolDBModel.GetAllStudents_Result)" />
+          <FunctionImport Name="GetEnrolledStudents" IsComposable="true" ReturnType="Collection(SchoolDBModel.GetEnrolledStudents_Result)">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetInstructors" IsComposable="true" ReturnType="Collection(SchoolDBModel.GetInstructors_Result)">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetPersonDetails" IsComposable="true" ReturnType="Collection(SchoolDBModel.GetPersonDetails_Result)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GrabSchedule" IsComposable="true" ReturnType="Collection(SchoolDBModel.GrabSchedule_Result)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ShowAllClosed" IsComposable="true" ReturnType="Collection(SchoolDBModel.ShowAllClosed_Result)" />
+          <FunctionImport Name="ShowAllClosed2" IsComposable="true" ReturnType="Collection(SchoolDBModel.ShowAllClosed2_Result)">
+            <Parameter Name="termid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ShowAllOpen" IsComposable="true" ReturnType="Collection(SchoolDBModel.ShowAllOpen_Result)" />
+          <FunctionImport Name="ShowAllOpen2" IsComposable="true" ReturnType="Collection(SchoolDBModel.ShowAllOpen2_Result)">
+            <Parameter Name="termid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SummonHoldList" IsComposable="true" ReturnType="Collection(SchoolDBModel.SummonHoldList_Result)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SummonSchedule" IsComposable="true" ReturnType="Collection(SchoolDBModel.SummonSchedule_Result)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Add2HoldList" ReturnType="Collection(String)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AddClass2StudentSchedule" ReturnType="Collection(String)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AddInstructor">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AddMajor">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="majorid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AddNewCourse" ReturnType="Collection(SchoolDBModel.AddNewCourse_Result)">
+            <Parameter Name="coursetitle" Mode="In" Type="String" />
+            <Parameter Name="credit" Mode="In" Type="Byte" />
+            <Parameter Name="coursedepartment" Mode="In" Type="String" />
+            <Parameter Name="capacity" Mode="In" Type="Int16" />
+            <Parameter Name="termseason" Mode="In" Type="String" />
+            <Parameter Name="termyear" Mode="In" Type="Int16" />
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="roomlocation" Mode="In" Type="String" />
+            <Parameter Name="buildingname" Mode="In" Type="String" />
+            <Parameter Name="roomcap" Mode="In" Type="Int16" />
+            <Parameter Name="day_" Mode="In" Type="Byte" />
+            <Parameter Name="stime" Mode="In" Type="Int16" />
+            <Parameter Name="etime" Mode="In" Type="Int16" />
+          </FunctionImport>
+          <FunctionImport Name="AddNewPerson" ReturnType="Collection(SchoolDBModel.AddNewPerson_Result)">
+            <Parameter Name="fname" Mode="In" Type="String" />
+            <Parameter Name="mname" Mode="In" Type="String" />
+            <Parameter Name="lname" Mode="In" Type="String" />
+            <Parameter Name="roleid" Mode="In" Type="Byte" />
+          </FunctionImport>
+          <FunctionImport Name="AlterCap">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+            <Parameter Name="newcap" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="AlterTime">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+            <Parameter Name="newstart" Mode="In" Type="Int32" />
+            <Parameter Name="newend" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CheckConflict" ReturnType="Collection(SchoolDBModel.CheckConflict_Result)">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteCourse">
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DropClassFromSchedule" ReturnType="Collection(String)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RemoveFromHoldList" ReturnType="Collection(String)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RemoveInstructor">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="courseid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RemoveMajor">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="majorid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="RemovePerson" ReturnType="Collection(String)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="currenttermid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SwitchRoles" ReturnType="Collection(String)">
+            <Parameter Name="personid" Mode="In" Type="Int32" />
+            <Parameter Name="newroleid" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="AddNewCourse_Result">
+          <Property Type="Int32" Name="courseid" Nullable="true" />
+          <Property Type="String" Name="coursetitle" Nullable="true" MaxLength="100" />
+          <Property Type="Byte" Name="credit" Nullable="true" />
+          <Property Type="String" Name="coursedept" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="enrolled" Nullable="true" />
+          <Property Type="Int16" Name="capacity" Nullable="true" />
+          <Property Type="Int16" Name="termid" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="AddNewPerson_Result">
+          <Property Type="String" Name="Fname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Mname" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Lname" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="RoleID" Nullable="true" />
+          <Property Type="Int32" Name="PersonID" Nullable="true" />
+          <Property Type="DateTime" Name="DateOfCreation" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="CheckConflict_Result">
+          <Property Type="String" Name="Term" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Days_" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="stime" Nullable="true" />
+          <Property Type="Int32" Name="etime" Nullable="true" />
+          <Property Type="Int32" Name="CourseID" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SchoolDBModelStoreContainer" CdmEntityContainer="SchoolDBEntities">
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="SchoolDBModel.Course">
+              <MappingFragment StoreEntitySet="Course">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DayTables">
+            <EntityTypeMapping TypeName="SchoolDBModel.DayTable">
+              <MappingFragment StoreEntitySet="DayTable">
+                <ScalarProperty Name="Day_" ColumnName="Day_" />
+                <ScalarProperty Name="NameOfDay" ColumnName="NameOfDay" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Holdings">
+            <EntityTypeMapping TypeName="SchoolDBModel.Holding">
+              <MappingFragment StoreEntitySet="Holding">
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Majors">
+            <EntityTypeMapping TypeName="SchoolDBModel.Major">
+              <MappingFragment StoreEntitySet="Major">
+                <ScalarProperty Name="MajorID" ColumnName="MajorID" />
+                <ScalarProperty Name="MajorTitle" ColumnName="MajorTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="SchoolDBModel.Person">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="DateOfCreation" ColumnName="DateOfCreation" />
+                <ScalarProperty Name="MajorID" ColumnName="MajorID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Roles">
+            <EntityTypeMapping TypeName="SchoolDBModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="roleTitle" ColumnName="roleTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="SchoolDBModel.Room">
+              <MappingFragment StoreEntitySet="Rooms">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="RoomLocation" ColumnName="RoomLocation" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="RoomCap" ColumnName="RoomCap" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schedules">
+            <EntityTypeMapping TypeName="SchoolDBModel.Schedule">
+              <MappingFragment StoreEntitySet="Schedule">
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Terms">
+            <EntityTypeMapping TypeName="SchoolDBModel.Term">
+              <MappingFragment StoreEntitySet="Term">
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="TermName" ColumnName="TermName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TimeBlocks">
+            <EntityTypeMapping TypeName="SchoolDBModel.TimeBlock">
+              <MappingFragment StoreEntitySet="TimeBlock">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="Day_" ColumnName="Day_" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Instructors" TypeName="SchoolDBModel.Instructors" StoreEntitySet="Instructors">
+            <EndProperty Name="Course">
+              <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+            </EndProperty>
+            <EndProperty Name="Person">
+              <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="MajorJunction" TypeName="SchoolDBModel.MajorJunction" StoreEntitySet="MajorJunction">
+            <EndProperty Name="Major">
+              <ScalarProperty Name="MajorID" ColumnName="MajorID" />
+            </EndProperty>
+            <EndProperty Name="Person">
+              <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="ScheduleJunction" TypeName="SchoolDBModel.ScheduleJunction" StoreEntitySet="ScheduleJunction">
+            <EndProperty Name="Course">
+              <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+            </EndProperty>
+            <EndProperty Name="Schedule">
+              <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.AllCourseInfo" FunctionImportName="AllCourseInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.AllCourseInfo_Result">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="Day_" ColumnName="Day_" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="RoomLocation" ColumnName="RoomLocation" />
+                <ScalarProperty Name="RoomCap" ColumnName="RoomCap" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.CourseInfo" FunctionImportName="CourseInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.CourseInfo_Result">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="Day_" ColumnName="Day_" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="RoomLocation" ColumnName="RoomLocation" />
+                <ScalarProperty Name="RoomCap" ColumnName="RoomCap" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GetAllEnrolled" FunctionImportName="GetAllEnrolled">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GetAllEnrolled_Result">
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="Full_Name" ColumnName="Full Name" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="TermName" ColumnName="TermName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GetAllPeople" FunctionImportName="GetAllPeople">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GetAllPeople_Result">
+                <ScalarProperty Name="Full_Name" ColumnName="Full Name" />
+                <ScalarProperty Name="Person_ID" ColumnName="Person_ID" />
+                <ScalarProperty Name="Role_Type" ColumnName="Role_Type" />
+                <ScalarProperty Name="DateOfCreation" ColumnName="DateOfCreation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GetAllStudents" FunctionImportName="GetAllStudents">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GetAllStudents_Result">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Role_Title" ColumnName="Role Title" />
+                <ScalarProperty Name="Major" ColumnName="Major" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="DateOfCreation" ColumnName="DateOfCreation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GetEnrolledStudents" FunctionImportName="GetEnrolledStudents">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GetEnrolledStudents_Result">
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="Full_Name" ColumnName="Full Name" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="ScheduleID" ColumnName="ScheduleID" />
+                <ScalarProperty Name="TermName" ColumnName="TermName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GetInstructors" FunctionImportName="GetInstructors">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GetInstructors_Result">
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GetPersonDetails" FunctionImportName="GetPersonDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GetPersonDetails_Result">
+                <ScalarProperty Name="Full_Name" ColumnName="Full Name" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="Major" ColumnName="Major" />
+                <ScalarProperty Name="DateOfCreation" ColumnName="DateOfCreation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.GrabSchedule" FunctionImportName="GrabSchedule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.GrabSchedule_Result">
+                <ScalarProperty Name="Full_Name" ColumnName="Full Name" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="RoomCap" ColumnName="RoomCap" />
+                <ScalarProperty Name="Dept_" ColumnName="Dept." />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="RoomID" ColumnName="RoomID" />
+                <ScalarProperty Name="RoomLocation" ColumnName="RoomLocation" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="TermName" ColumnName="TermName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.ShowAllClosed" FunctionImportName="ShowAllClosed">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.ShowAllClosed_Result">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.ShowAllClosed2" FunctionImportName="ShowAllClosed2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.ShowAllClosed2_Result">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.ShowAllOpen" FunctionImportName="ShowAllOpen">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.ShowAllOpen_Result">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.ShowAllOpen2" FunctionImportName="ShowAllOpen2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.ShowAllOpen2_Result">
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="CourseDepartment" ColumnName="CourseDepartment" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.SummonHoldList" FunctionImportName="SummonHoldList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.SummonHoldList_Result">
+                <ScalarProperty Name="Full_Name" ColumnName="Full Name" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+                <ScalarProperty Name="RoomLocation" ColumnName="RoomLocation" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="RoomCap" ColumnName="RoomCap" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionName="SchoolDBModel.Store.SummonSchedule" FunctionImportName="SummonSchedule">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.SummonSchedule_Result">
+                <ScalarProperty Name="CourseTitle" ColumnName="CourseTitle" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Days" ColumnName="Days" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="End" ColumnName="End" />
+                <ScalarProperty Name="Credits" ColumnName="Credits" />
+                <ScalarProperty Name="Enrolled" ColumnName="Enrolled" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="Building" ColumnName="Building" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="RoomCap" ColumnName="RoomCap" />
+                <ScalarProperty Name="Term" ColumnName="Term" />
+                <ScalarProperty Name="TermID" ColumnName="TermID" />
+                <ScalarProperty Name="Dept_" ColumnName="Dept." />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Add2HoldList" FunctionName="SchoolDBModel.Store.Add2HoldList" />
+          <FunctionImportMapping FunctionImportName="AddClass2StudentSchedule" FunctionName="SchoolDBModel.Store.AddClass2StudentSchedule" />
+          <FunctionImportMapping FunctionImportName="AddInstructor" FunctionName="SchoolDBModel.Store.AddInstructor" />
+          <FunctionImportMapping FunctionImportName="AddMajor" FunctionName="SchoolDBModel.Store.AddMajor" />
+          <FunctionImportMapping FunctionImportName="AddNewCourse" FunctionName="SchoolDBModel.Store.AddNewCourse">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.AddNewCourse_Result">
+                <ScalarProperty Name="courseid" ColumnName="courseid" />
+                <ScalarProperty Name="coursetitle" ColumnName="coursetitle" />
+                <ScalarProperty Name="credit" ColumnName="credit" />
+                <ScalarProperty Name="coursedept" ColumnName="coursedept" />
+                <ScalarProperty Name="enrolled" ColumnName="enrolled" />
+                <ScalarProperty Name="capacity" ColumnName="capacity" />
+                <ScalarProperty Name="termid" ColumnName="termid" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="AddNewPerson" FunctionName="SchoolDBModel.Store.AddNewPerson">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.AddNewPerson_Result">
+                <ScalarProperty Name="Fname" ColumnName="Fname" />
+                <ScalarProperty Name="Mname" ColumnName="Mname" />
+                <ScalarProperty Name="Lname" ColumnName="Lname" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="PersonID" ColumnName="PersonID" />
+                <ScalarProperty Name="DateOfCreation" ColumnName="DateOfCreation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="AlterCap" FunctionName="SchoolDBModel.Store.AlterCap" />
+          <FunctionImportMapping FunctionImportName="AlterTime" FunctionName="SchoolDBModel.Store.AlterTime" />
+          <FunctionImportMapping FunctionImportName="CheckConflict" FunctionName="SchoolDBModel.Store.CheckConflict">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="SchoolDBModel.CheckConflict_Result">
+                <ScalarProperty Name="Term" ColumnName="Term" />
+                <ScalarProperty Name="Days_" ColumnName="Days_" />
+                <ScalarProperty Name="stime" ColumnName="stime" />
+                <ScalarProperty Name="etime" ColumnName="etime" />
+                <ScalarProperty Name="CourseID" ColumnName="CourseID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DeleteCourse" FunctionName="SchoolDBModel.Store.DeleteCourse" />
+          <FunctionImportMapping FunctionImportName="DropClassFromSchedule" FunctionName="SchoolDBModel.Store.DropClassFromSchedule" />
+          <FunctionImportMapping FunctionImportName="RemoveFromHoldList" FunctionName="SchoolDBModel.Store.RemoveFromHoldList" />
+          <FunctionImportMapping FunctionImportName="RemoveInstructor" FunctionName="SchoolDBModel.Store.RemoveInstructor" />
+          <FunctionImportMapping FunctionImportName="RemoveMajor" FunctionName="SchoolDBModel.Store.RemoveMajor" />
+          <FunctionImportMapping FunctionImportName="RemovePerson" FunctionName="SchoolDBModel.Store.RemovePerson" />
+          <FunctionImportMapping FunctionImportName="SwitchRoles" FunctionName="SchoolDBModel.Store.SwitchRoles" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

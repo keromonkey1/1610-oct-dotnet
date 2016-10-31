@@ -14,5 +14,6 @@ namespace MonsterApp.DataAccess.Models
     public int MonsterTypeID { get; set; }
     public string Name { get; set; }
     public bool Active { get; set; }
+    public string TypeName { get; internal set; }
   }
 }
